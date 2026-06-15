@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Luxury Real Estate</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            DEFAULT: '#D4AF37',
+                            light: '#F3E5AB',
+                            dark: '#AA8C2C',
+                        },
+                        dark: {
+                            DEFAULT: '#0A0A0A',
+                            secondary: '#141414',
+                            card: '#1C1C1C',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80')",
+                        'category-mansion': "url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80')",
+                        'category-villa': "url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80')",
+                        'category-penthouse': "url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80')",
+                        'category-apartment': "url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Effects */
+        body {
+            background-color: #0A0A0A;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism */
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .glass-panel {
+            background: rgba(28, 28, 28, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Inputs within Glass */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hover Cards */
+        .property-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .property-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+        .property-card:hover .property-img {
+            transform: scale(1.05);
+        }
+
+        .category-card {
+            overflow: hidden;
+        }
+        .category-card .overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.2));
+            transition: all 0.4s ease;
+        }
+        .category-card:hover .overlay {
+            background: linear-gradient(to top, rgba(212, 175, 55, 0.8), rgba(0,0,0,0.4));
+        }
+        .category-card img {
+            transition: transform 0.6s ease;
+        }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #AA8C2C;
+        }
+
+        /* Form Reset for dropdown arrow */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position-x: 95%;
+            background-position-y: center;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out;
+            opacity: 0;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            opacity: 1;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: #D4AF37;
+        }
+        .faq-icon {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-dark">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-serif font-bold text-white tracking-widest uppercase">
+                        Au<span class="text-gold">ra</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-sm font-medium hover:text-gold transition-colors">Home</a>
+                    <a href="#properties" class="text-sm font-medium hover:text-gold transition-colors">Properties</a>
+                    <a href="#about" class="text-sm font-medium hover:text-gold transition-colors">About</a>
+                    <a href="#agents" class="text-sm font-medium hover:text-gold transition-colors">Agents</a>
+                    <a href="#contact" class="text-sm font-medium hover:text-gold transition-colors">Contact</a>
+                    <a href="#contact" class="px-5 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition-all duration-300 rounded-sm text-sm font-semibold tracking-wider uppercase">
+                        List Property
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-white hover:text-gold focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel absolute top-full left-0 w-full border-t-0 flex-col py-4 px-4 space-y-4">
+            <a href="#home" class="block text-white hover:text-gold text-lg">Home</a>
+            <a href="#properties" class="block text-white hover:text-gold text-lg">Properties</a>
+            <a href="#about" class="block text-white hover:text-gold text-lg">About</a>
+            <a href="#agents" class="block text-white hover:text-gold text-lg">Agents</a>
+            <a href="#contact" class="block text-white hover:text-gold text-lg">Contact</a>
+            <a href="#contact" class="inline-block px-5 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition-all duration-300 rounded-sm text-center">List Property</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center bg-dark">
+        <!-- Background Image with Parallax effect via fixed attachment or JS -->
+        <div class="absolute inset-0 bg-hero-pattern bg-cover bg-center bg-no-repeat bg-fixed opacity-60"></div>
+        
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/40 to-dark"></div>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-20">
+            <span class="text-gold tracking-[0.2em] uppercase text-sm font-semibold mb-4 block reveal">Exceptional Living</span>
+            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight reveal reveal-delay-1">
+                Discover Your <br> <span class="italic font-light">Dream Home</span>
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light reveal reveal-delay-2">
+                Curated premium real estate properties in the world's most exclusive destinations. Experience luxury redefined.
+            </p>
+            <div class="reveal reveal-delay-3 flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#properties" class="px-8 py-4 bg-gold text-dark font-semibold tracking-wider uppercase hover:bg-white transition-colors duration-300 rounded-sm shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                    Explore Properties
+                </a>
+                <a href="#contact" class="px-8 py-4 border border-white text-white font-semibold tracking-wider uppercase hover:border-gold hover:text-gold transition-colors duration-300 rounded-sm">
+                    Contact an Agent
+                </a>
+            </div>
+        </div>
+
+        <!-- Property Search (Floating Glass Panel) -->
+        <div class="absolute -bottom-16 left-0 right-0 z-20 px-4 reveal reveal-delay-3">
+            <div class="max-w-6xl mx-auto glass-panel p-6 rounded-lg">
+                <form class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">Location</label>
+                        <select class="w-full glass-input p-3 rounded-sm text-sm">
+                            <option value="">All Locations</option>
+                            <option value="beverly">Beverly Hills, CA</option>
+                            <option value="manhattan">Manhattan, NY</option>
+                            <option value="miami">Miami Beach, FL</option>
+                            <option value="dubai">Dubai, UAE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">Property Type</label>
+                        <select class="w-full glass-input p-3 rounded-sm text-sm">
+                            <option value="">All Types</option>
+                            <option value="mansion">Mansion</option>
+                            <option value="villa">Villa</option>
+                            <option value="penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">Price Range</label>
+                        <select class="w-full glass-input p-3 rounded-sm text-sm">
+                            <option value="">Any Price</option>
+                            <option value="1-5">$1M - $5M</option>
+                            <option value="5-10">$5M - $10M</option>
+                            <option value="10+">$10M+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="button" class="w-full bg-gold text-dark font-semibold p-3 rounded-sm hover:bg-gold-light transition-colors uppercase tracking-wider text-sm flex justify-center items-center gap-2">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spacer for floating search bar -->
+    <div class="h-24 bg-dark"></div>
+
+    <!-- Featured Properties Section -->
+    <section id="properties" class="py-20 bg-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-gold text-sm font-semibold tracking-widest uppercase mb-2">Exclusive Collection</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-white">Featured Properties</h3>
+                <div class="w-24 h-1 bg-gold mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Property 1 -->
+                <div class="property-card bg-dark-card rounded-lg overflow-hidden reveal group">
+                    <div class="relative overflow-hidden">
+                        <div class="absolute top-4 left-4 z-10 bg-dark/80 backdrop-blur px-3 py-1 text-xs text-white uppercase tracking-wider border border-white/10 rounded-sm">Featured</div>
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80" alt="Villa in Beverly Hills" class="w-full h-72 object-cover property-img transition-transform duration-700">
+                        <div class="absolute bottom-4 right-4 z-10 bg-gold text-dark font-bold px-4 py-2 rounded-sm">$12,500,000</div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 text-sm mb-2"><i class="fas fa-map-marker-alt text-gold mr-2"></i>Beverly Hills, California</p>
+                        <h4 class="text-2xl font-serif font-bold text-white mb-4 group-hover:text-gold transition-colors">The Belvedere Estate</h4>
+                        <div class="flex justify-between text-gray-300 text-sm border-t border-white/10 pt-4 mb-6">
+                            <span class="flex items-center gap-2"><i class="fas fa-bed text-gold"></i> 6 Beds</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-bath text-gold"></i> 8 Baths</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-vector-square text-gold"></i> 10,500 sqft</span>
+                        </div>
+                        <a href="#" class="block text-center border border-gold/50 text-gold hover:bg-gold hover:text-dark py-3 transition-all rounded-sm uppercase text-sm tracking-wider font-semibold">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Property 2 -->
+                <div class="property-card bg-dark-card rounded-lg overflow-hidden reveal reveal-delay-1 group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80" alt="Modern Mansion" class="w-full h-72 object-cover property-img transition-transform duration-700">
+                        <div class="absolute bottom-4 right-4 z-10 bg-gold text-dark font-bold px-4 py-2 rounded-sm">$8,900,000</div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 text-sm mb-2"><i class="fas fa-map-marker-alt text-gold mr-2"></i>Miami Beach, Florida</p>
+                        <h4 class="text-2xl font-serif font-bold text-white mb-4 group-hover:text-gold transition-colors">Oceanfront Oasis</h4>
+                        <div class="flex justify-between text-gray-300 text-sm border-t border-white/10 pt-4 mb-6">
+                            <span class="flex items-center gap-2"><i class="fas fa-bed text-gold"></i> 5 Beds</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-bath text-gold"></i> 6 Baths</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-vector-square text-gold"></i> 8,200 sqft</span>
+                        </div>
+                        <a href="#" class="block text-center border border-gold/50 text-gold hover:bg-gold hover:text-dark py-3 transition-all rounded-sm uppercase text-sm tracking-wider font-semibold">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Property 3 -->
+                <div class="property-card bg-dark-card rounded-lg overflow-hidden reveal reveal-delay-2 group">
+                    <div class="relative overflow-hidden">
+                        <div class="absolute top-4 left-4 z-10 bg-dark/80 backdrop-blur px-3 py-1 text-xs text-white uppercase tracking-wider border border-white/10 rounded-sm">New Build</div>
+                        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80" alt="Penthouse" class="w-full h-72 object-cover property-img transition-transform duration-700">
+                        <div class="absolute bottom-4 right-4 z-10 bg-gold text-dark font-bold px-4 py-2 rounded-sm">$15,250,000</div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 text-sm mb-2"><i class="fas fa-map-marker-alt text-gold mr-2"></i>Manhattan, New York</p>
+                        <h4 class="text-2xl font-serif font-bold text-white mb-4 group-hover:text-gold transition-colors">Skyline Penthouse</h4>
+                        <div class="flex justify-between text-gray-300 text-sm border-t border-white/10 pt-4 mb-6">
+                            <span class="flex items-center gap-2"><i class="fas fa-bed text-gold"></i> 4 Beds</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-bath text-gold"></i> 5.5 Baths</span>
+                            <span class="flex items-center gap-2"><i class="fas fa-vector-square text-gold"></i> 6,800 sqft</span>
+                        </div>
+                        <a href="#" class="block text-center border border-gold/50 text-gold hover:bg-gold hover:text-dark py-3 transition-all rounded-sm uppercase text-sm tracking-wider font-semibold">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 reveal">
+                <a href="#" class="inline-flex items-center gap-2 text-white hover:text-gold transition-colors text-sm font-semibold tracking-wider uppercase border-b border-transparent hover:border-gold pb-1">
+                    View All Properties <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Property Categories -->
+    <section class="py-20 bg-dark-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                <div>
+                    <h2 class="text-gold text-sm font-semibold tracking-widest uppercase mb-2">Portfolio</h2>
+                    <h3 class="text-4xl font-serif font-bold text-white">Browse By Category</h3>
+                </div>
+                <p class="text-gray-400 max-w-md mt-4 md:mt-0 text-sm md:text-right">
+                    Explore our diverse portfolio of luxury real estate to find the architectural masterpiece that perfectly matches your lifestyle.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-[600px] lg:h-[400px]">
+                <!-- Category 1 -->
+                <a href="#" class="category-card relative rounded-lg block h-full reveal">
+                    <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80" alt="Mansions" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="overlay absolute inset-0 flex flex-col justify-end p-6 border border-transparent hover:border-gold/50">
+                        <h4 class="text-2xl font-serif font-bold text-white mb-1">Mansions</h4>
+                        <p class="text-gold text-sm flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">Explore <i class="fas fa-long-arrow-alt-right"></i></p>
+                    </div>
+                </a>
+                
+                <!-- Category 2 -->
+                <a href="#" class="category-card relative rounded-lg block h-full reveal reveal-delay-1">
+                    <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80" alt="Villas" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="overlay absolute inset-0 flex flex-col justify-end p-6 border border-transparent hover:border-gold/50">
+                        <h4 class="text-2xl font-serif font-bold text-white mb-1">Villas</h4>
+                        <p class="text-gold text-sm flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">Explore <i class="fas fa-long-arrow-alt-right"></i></p>
+                    </div>
+                </a>
+
+                <!-- Category 3 -->
+                <a href="#" class="category-card relative rounded-lg block h-full reveal reveal-delay-2">
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80" alt="Penthouses" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="overlay absolute inset-0 flex flex-col justify-end p-6 border border-transparent hover:border-gold/50">
+                        <h4 class="text-2xl font-serif font-bold text-white mb-1">Penthouses</h4>
+                        <p class="text-gold text-sm flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">Explore <i class="fas fa-long-arrow-alt-right"></i></p>
+                    </div>
+                </a>
+
+                <!-- Category 4 -->
+                <a href="#" class="category-card relative rounded-lg block h-full reveal reveal-delay-3">
+                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80" alt="Apartments" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="overlay absolute inset-0 flex flex-col justify-end p-6 border border-transparent hover:border-gold/50">
+                        <h4 class="text-2xl font-serif font-bold text-white mb-1">Apartments</h4>
+                        <p class="text-gold text-sm flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">Explore <i class="fas fa-long-arrow-alt-right"></i></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us & Statistics -->
+    <section id="about" class="py-24 bg-dark relative overflow-hidden">
+        <!-- Decorative bg circle -->
+        <div class="absolute top-0 right-0 -mr-48 -mt-48 w-96 h-96 rounded-full bg-gold opacity-5 blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Text Content -->
+                <div class="reveal">
+                    <h2 class="text-gold text-sm font-semibold tracking-widest uppercase mb-2">The Aura Advantage</h2>
+                    <h3 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Redefining the standard of luxury real estate.</h3>
+                    <p class="text-gray-400 mb-8 font-light leading-relaxed">
+                        With over two decades of experience navigating the high-end property market, we provide our clients with unparalleled access to the world's most coveted off-market listings. Our discreet, personalized approach ensures that finding your dream home is as flawless as the property itself.
+                    </p>
+                    
+                    <ul class="space-y-4 mb-10 text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-gold mt-1 mr-4"></i>
+                            <span>Access to exclusive, off-market properties worldwide.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-gold mt-1 mr-4"></i>
+                            <span>Bespoke concierge services for buyers and sellers.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-gold mt-1 mr-4"></i>
+                            <span>Award-winning team of luxury market specialists.</span>
+                        </li>
+                    </ul>
+
+                    <a href="#contact" class="px-8 py-3 bg-white text-dark hover:bg-gold hover:text-white transition-colors duration-300 font-semibold uppercase tracking-wider text-sm rounded-sm">Learn More</a>
+                </div>
+
+                <!-- Images & Stats -->
+                <div class="relative reveal reveal-delay-1">
+                    <div class="relative z-10 rounded-lg overflow-hidden border border-white/10 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&q=80" alt="Luxury Interior" class="w-full h-[500px] object-cover">
+                    </div>
+                    
+                    <!-- Stats Floating Card (Glassmorphism) -->
+                    <div class="absolute -bottom-10 -left-10 z-20 glass-panel p-8 rounded-lg max-w-sm hidden md:block">
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="text-center">
+                                <div class="text-4xl font-serif font-bold text-gold mb-1 stat-counter" data-target="25">0</div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest">Years Exp.</div>
+                            </div>
+                            <div class="text-center border-l border-white/10 pl-8">
+                                <div class="text-4xl font-serif font-bold text-gold mb-1"><span class="stat-counter" data-target="850">0</span>+</div>
+                                <div class="text-xs text-gray-400 uppercase tracking-widest">Properties</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Mobile Stats (Visible only on small screens) -->
+            <div class="grid grid-cols-2 gap-4 mt-12 md:hidden reveal">
+                <div class="glass-panel p-6 rounded-lg text-center">
+                    <div class="text-4xl font-serif font-bold text-gold mb-1 stat-counter" data-target="25">0</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">Years Exp.</div>
+                </div>
+                <div class="glass-panel p-6 rounded-lg text-center">
+                    <div class="text-4xl font-serif font-bold text-gold mb-1"><span class="stat-counter" data-target="850">0</span>+</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">Properties</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expert Agents -->
+    <section id="agents" class="py-20 bg-dark-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-gold text-sm font-semibold tracking-widest uppercase mb-2">Our Professionals</h2>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-white">Meet the Experts</h3>
+                <div class="w-24 h-1 bg-gold mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Agent 1 -->
+                <div class="glass-panel rounded-lg overflow-hidden text-center reveal group hover:-translate-y-3 transition-transform duration-500">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80" alt="Agent" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gold w-12 h-12 flex items-center justify-center rounded-full shadow-lg">
+                            <i class="fas fa-star text-dark text-sm"></i>
+                        </div>
+                        <h4 class="text-xl font-serif font-bold text-white mt-4">Michael Sterling</h4>
+                        <p class="text-gold text-sm mb-4">Managing Director</p>
+                        <div class="flex justify-center space-x-4 text-gray-400">
+                            <a href="#" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="hover:text-white transition-colors"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent 2 -->
+                <div class="glass-panel rounded-lg overflow-hidden text-center reveal reveal-delay-1 group hover:-translate-y-3 transition-transform duration-500">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80" alt="Agent" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gold w-12 h-12 flex items-center justify-center rounded-full shadow-lg">
+                            <i class="fas fa-star text-dark text-sm"></i>
+                        </div>
+                        <h4 class="text-xl font-serif font-bold text-white mt-4">Eleanor Vance</h4>
+                        <p class="text-gold text-sm mb-4">Luxury Specialist</p>
+                        <div class="flex justify-center space-x-4 text-gray-400">
+                            <a href="#" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="hover:text-white transition-colors"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent 3 -->
+                <div class="glass-panel rounded-lg overflow-hidden text-center reveal reveal-delay-2 group hover:-translate-y-3 transition-transform duration-500">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80" alt="Agent" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gold w-12 h-12 flex items-center justify-center rounded-full shadow-lg">
+                            <i class="fas fa-star text-dark text-sm"></i>
+                        </div>
+                        <h4 class="text-xl font-serif font-bold text-white mt-4">Julian Thorne</h4>
+                        <p class="text-gold text-sm mb-4">Investment Advisor</p>
+                        <div class="flex justify-center space-x-4 text-gray-400">
+                            <a href="#" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="hover:text-white transition-colors"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 bg-dark relative overflow-hidden">
+        <!-- Background Quote Icon -->
+        <i class="fas fa-quote-right absolute top-10 right-10 text-[15rem] text-white/5 z-0 pointer-events-none"></i>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
+            <h2 class="text-gold text-sm font-semibold tracking-widest uppercase mb-12">Client Testimonials</h2>
+            
+            <div class="glass-panel p-10 md:p-16 rounded-xl border-gold/20">
+                <div class="flex justify-center mb-6 text-gold space-x-1">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-xl md:text-3xl font-serif text-white italic mb-8 leading-relaxed">
+                    "The level of service and dedication provided by Aura is truly unmatched. They found us a masterpiece in Beverly Hills that wasn't even on the market. A completely seamless and luxurious experience."
+                </p>
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-widest text-sm">Alexander & Victoria</h5>
+                    <p class="text-gray-500 text-xs mt-1">Beverly Hills Homeowners</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-dark-secondary">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-4xl font-serif font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-400">Everything you need to know about the buying process.</p>
+            </div>
+
+            <div class="space-y-4 reveal reveal-delay-1">
+                <!-- FAQ 1 -->
+                <div class="faq-item glass-panel rounded-lg border-white/10 overflow-hidden cursor-pointer">
+                    <div class="p-6 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors">
+                        <h4 class="text-white font-semibold pr-8">How do I schedule a private viewing?</h4>
+                        <i class="fas fa-chevron-down text-gray-400 faq-icon"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-400 text-sm leading-relaxed bg-dark/50">
+                        To schedule a private viewing, you can contact our concierge team directly via phone, or fill out the inquiry form on the property's dedicated page. We require a brief verification process for our most exclusive listings to ensure privacy for our sellers.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="faq-item glass-panel rounded-lg border-white/10 overflow-hidden cursor-pointer">
+                    <div class="p-6 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors">
+                        <h4 class="text-white font-semibold pr-8">Do you handle international transactions?</h4>
+                        <i class="fas fa-chevron-down text-gray-400 faq-icon"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-400 text-sm leading-relaxed bg-dark/50">
+                        Absolutely. Over 40% of our clients are international buyers. We have a dedicated team of legal and financial experts who specialize in cross-border transactions, ensuring a smooth process regardless of your home country.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="faq-item glass-panel rounded-lg border-white/10 overflow-hidden cursor-pointer">
+                    <div class="p-6 flex justify-between items-center bg-white/5 hover:bg-white/10 transition-colors">
+                        <h4 class="text-white font-semibold pr-8">What is an off-market property?</h4>
+                        <i class="fas fa-chevron-down text-gray-400 faq-icon"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-400 text-sm leading-relaxed bg-dark/50">
+                        Off-market properties (or pocket listings) are homes for sale that are not publicly advertised on multiple listing services (MLS). Because of our extensive network, we provide our clients access to these highly exclusive, private sales.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-dark relative border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <!-- Contact Info -->
+                <div class="reveal">
+                    <h2 class="text-gold text-sm font-semibold tracking-widest uppercase mb-2">Get in Touch</h2>
+                    <h3 class="text-4xl font-serif font-bold text-white mb-6">Start Your Journey.</h3>
+                    <p class="text-gray-400 mb-10">
+                        Whether you are looking to acquire a new property or sell your current residence, our team of experts is ready to assist you with the utmost discretion and professionalism.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-gold mr-6 flex-shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Global Headquarters</h4>
+                                <p class="text-gray-400 text-sm">450 Park Avenue, 21st Floor<br>New York, NY 10022</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-gold mr-6 flex-shrink-0">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Direct Line</h4>
+                                <p class="text-gray-400 text-sm">+1 (212) 555-0198</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-gold mr-6 flex-shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold mb-1">Email inquiries</h4>
+                                <p class="text-gray-400 text-sm">concierge@aurarealestate.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="glass-panel p-8 md:p-10 rounded-xl reveal reveal-delay-1">
+                    <form onsubmit="event.preventDefault();" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">First Name</label>
+                                <input type="text" class="w-full glass-input p-4 rounded-sm text-sm" placeholder="John">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">Last Name</label>
+                                <input type="text" class="w-full glass-input p-4 rounded-sm text-sm" placeholder="Doe">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                            <input type="email" class="w-full glass-input p-4 rounded-sm text-sm" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2">Message</label>
+                            <textarea rows="4" class="w-full glass-input p-4 rounded-sm text-sm resize-none" placeholder="How can we assist you?"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gold text-dark font-bold p-4 rounded-sm hover:bg-white transition-colors uppercase tracking-wider">
+                            Send Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black pt-20 pb-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Brand -->
+                <div>
+                    <a href="#" class="text-3xl font-serif font-bold text-white tracking-widest uppercase mb-6 block">
+                        Au<span class="text-gold">ra</span>
+                    </a>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                        Curating the world's most exceptional properties for the most discerning clientele. Excellence is our only standard.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-gold hover:border-gold transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-gold hover:border-gold transition-all"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center text-gray-400 hover:text-gold hover:border-gold transition-all"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6">Company</h4>
+                    <ul class="space-y-3 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-gold transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Our Agents</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Press & Media</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6">Properties</h4>
+                    <ul class="space-y-3 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-gold transition-colors">Los Angeles</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">New York</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Miami</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">London</a></li>
+                        <li><a href="#" class="hover:text-gold transition-colors">Dubai</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-6">Newsletter</h4>
+                    <p class="text-gray-500 text-sm mb-4">Subscribe to receive exclusive off-market listings and market reports.</p>
+                    <form onsubmit="event.preventDefault();" class="flex">
+                        <input type="email" placeholder="Email Address" class="bg-gray-900 border border-gray-800 text-white px-4 py-2 w-full text-sm focus:outline-none focus:border-gold transition-colors">
+                        <button class="bg-gold text-dark px-4 py-2 hover:bg-white transition-colors">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
+                <p>&copy; 2026 Aura Luxury Real Estate. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Navbar Background on Scroll ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-lg');
+                    navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                } else {
+                    navbar.classList.remove('shadow-lg');
+                    navbar.style.background = 'rgba(10, 10, 10, 0.7)';
+                }
+            });
+
+            // --- Mobile Menu Toggle ---
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+            });
+
+            // Close mobile menu on link click
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('flex');
+                });
+            });
+
+            // --- Scroll Reveal Animations ---
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => revealOnScroll.observe(el));
+
+            // --- Number Counter Animation ---
+            const counters = document.querySelectorAll('.stat-counter');
+            let hasCounted = false;
+
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !hasCounted) {
+                        hasCounted = true;
+                        counters.forEach(counter => {
+                            const target = +counter.getAttribute('data-target');
+                            const duration = 2000; // ms
+                            const increment = target / (duration / 16); // 60fps
+                            let current = 0;
+
+                            const updateCounter = () => {
+                                current += increment;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current);
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    counter.innerText = target;
+                                }
+                            };
+                            updateCounter();
+                        });
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => counterObserver.observe(counter));
+
+            // --- FAQ Accordion ---
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    // Close all others
+                    faqItems.forEach(otherItem => {
+                        otherItem.classList.remove('active');
+                    });
+
+                    // Toggle current
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

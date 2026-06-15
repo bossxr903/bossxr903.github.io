@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Digital Agency</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config & Custom CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563EB',
+                            dark: '#0F172A',
+                            light: '#FFFFFF',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-color: #0F172A;
+            color: #FFFFFF;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal-up.active, .reveal-left.active, .reveal-right.active {
+            opacity: 1;
+            transform: translate(0);
+        }
+
+        /* Staggered transition delays for lists/grids */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        /* Custom Hover Effects */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-gradient-blue {
+            background: linear-gradient(135deg, #60A5FA, #2563EB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* FAQ Accordion Details Marker Hide */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        /* Image overlay setup */
+        .portfolio-overlay {
+            background: linear-gradient(to top, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0) 100%);
+        }
+        
+        /* New utility to ensure background images cover perfectly */
+        .bg-cover-center {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-blue selection:text-white">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-12">
+                <!-- Logo -->
+                <div class="flex-shrink-0 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center">
+                            <i data-lucide="hexagon" class="text-white w-5 h-5 fill-white/20"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">Nexus</span>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#services" class="text-slate-300 hover:text-white transition-colors text-sm font-medium">Services</a>
+                        <a href="#work" class="text-slate-300 hover:text-white transition-colors text-sm font-medium">Work</a>
+                        <a href="#pricing" class="text-slate-300 hover:text-white transition-colors text-sm font-medium">Pricing</a>
+                        <a href="#about" class="text-slate-300 hover:text-white transition-colors text-sm font-medium">About</a>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a href="#contact" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white transition-all bg-brand-blue rounded-full hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                        Let's Talk
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-white hover:bg-white/10 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-white/5 absolute w-full">
+            <div class="px-4 pt-2 pb-6 space-y-1 sm:px-3 flex flex-col gap-4 mt-4">
+                <a href="#services" class="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Services</a>
+                <a href="#work" class="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Work</a>
+                <a href="#pricing" class="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Pricing</a>
+                <a href="#about" class="text-slate-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#contact" class="w-full text-center mt-4 px-5 py-3 text-base font-medium text-white bg-brand-blue rounded-lg">Let's Talk</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Abstract Animated Background -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-brand-blue/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+            <div class="absolute top-[20%] right-[-10%] w-[35vw] h-[35vw] bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-[-20%] left-[20%] w-[45vw] h-[45vw] bg-blue-400/10 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000"></div>
+            <!-- Grid Pattern -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center flex flex-col items-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8 reveal-up">
+                <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
+                </span>
+                <span class="text-xs font-medium text-slate-300 uppercase tracking-wider">Accepting New Projects</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6 reveal-up delay-100 max-w-5xl">
+                Design that <br class="hidden md:block"/>
+                <span class="text-gradient-blue">transforms</span> businesses.
+            </h1>
+            
+            <p class="mt-4 text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 reveal-up delay-200 font-light leading-relaxed">
+                We are a digital agency bridging the gap between innovative design and robust engineering to build world-class digital products.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-up delay-300">
+                <a href="#contact" class="px-8 py-4 text-sm font-semibold text-white bg-brand-blue rounded-full hover:bg-blue-500 transition-all hover-lift hover:shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                    Start a Project
+                </a>
+                <a href="#work" class="px-8 py-4 text-sm font-semibold text-white glass rounded-full hover:bg-white/10 transition-all hover-lift flex items-center justify-center gap-2">
+                    View Our Work <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Dashboard/App Preview Mockup (Parallax element with real image) -->
+            <div class="mt-20 w-full max-w-5xl mx-auto perspective-1000 reveal-up delay-400">
+                <div class="glass rounded-2xl md:rounded-[2rem] p-2 border border-white/10 shadow-2xl overflow-hidden relative group" data-parallax="0.05">
+                    <!-- Browser Chrome -->
+                    <div class="h-8 bg-slate-900/50 flex items-center px-4 gap-2 border-b border-white/5 rounded-t-xl md:rounded-t-[1.8rem]">
+                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                    </div>
+                    <!-- Real Image Mockup -->
+                    <div class="bg-[#0b1121] aspect-video rounded-b-xl md:rounded-b-[1.8rem] relative overflow-hidden flex flex-col bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop');">
+                        <!-- Dark overlay to ensure it blends well with the dark theme -->
+                        <div class="absolute inset-0 bg-brand-dark/20 mix-blend-multiply"></div>
+                    </div>
+                    <!-- Hover overlay gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logo Ticker -->
+    <div class="border-y border-white/5 bg-white/[0.02] py-8 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-sm text-slate-400 mb-6 uppercase tracking-widest font-medium">Trusted by innovative teams</p>
+            <div class="flex justify-between items-center opacity-50 grayscale hover:grayscale-0 transition-all duration-500 gap-8 md:gap-0 flex-wrap md:flex-nowrap">
+                <!-- Using inline SVGs for logos to avoid external dependencies -->
+                <svg class="h-6 md:h-8 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><path d="M10,15 L20,5 L30,15 L20,25 Z M40,10 H90 V20 H40 Z"/></svg>
+                <svg class="h-6 md:h-8 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><circle cx="15" cy="15" r="10"/><path d="M35,10 H85 V20 H35 Z"/></svg>
+                <svg class="h-6 md:h-8 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><path d="M5,25 L15,5 L25,25 M35,10 H85 V20 H35 Z"/></svg>
+                <svg class="h-6 md:h-8 w-auto text-white" viewBox="0 0 100 30" fill="currentColor"><rect x="5" y="5" width="20" height="20"/><path d="M35,10 H85 V20 H35 Z"/></svg>
+                <svg class="h-6 md:h-8 w-auto text-white hidden md:block" viewBox="0 0 100 30" fill="currentColor"><path d="M10,15 A 10 10 0 0 0 30 15 A 10 10 0 0 0 10 15 M40,10 H90 V20 H40 Z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 md:py-32 relative bg-slate-50 text-slate-900">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal-up">
+                <h2 class="text-brand-blue font-semibold tracking-wide uppercase text-sm mb-3">Our Expertise</h2>
+                <h3 class="text-3xl md:text-5xl font-bold tracking-tight mb-6">Everything you need to scale your digital presence.</h3>
+                <p class="text-slate-600 text-lg">We combine strategic thinking with top-tier execution to deliver solutions that solve real business problems.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="glass-card-light p-8 rounded-2xl hover-lift group reveal-up">
+                    <div class="w-14 h-14 bg-blue-100 text-brand-blue rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="layout" class="w-7 h-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900">UX/UI Design</h4>
+                    <p class="text-slate-600 leading-relaxed">Intuitive, user-centric interfaces that engage users and drive conversions. We build design systems that scale.</p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="glass-card-light p-8 rounded-2xl hover-lift group reveal-up delay-100">
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="code-2" class="w-7 h-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900">Web Development</h4>
+                    <p class="text-slate-600 leading-relaxed">High-performance, accessible, and scalable web applications built with modern frameworks like React and Next.js.</p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="glass-card-light p-8 rounded-2xl hover-lift group reveal-up delay-200">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="smartphone" class="w-7 h-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900">Mobile Apps</h4>
+                    <p class="text-slate-600 leading-relaxed">Native and cross-platform mobile experiences that bring your product directly into your customers' hands.</p>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="glass-card-light p-8 rounded-2xl hover-lift group reveal-up">
+                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="lightbulb" class="w-7 h-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900">Product Strategy</h4>
+                    <p class="text-slate-600 leading-relaxed">Comprehensive market analysis and product roadmapping to ensure we build the right thing for the right audience.</p>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="glass-card-light p-8 rounded-2xl hover-lift group reveal-up delay-100">
+                    <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="trending-up" class="w-7 h-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900">Growth Marketing</h4>
+                    <p class="text-slate-600 leading-relaxed">Data-driven strategies to acquire, activate, and retain users. SEO, performance marketing, and conversion optimization.</p>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="glass-card-light p-8 rounded-2xl hover-lift group reveal-up delay-200">
+                    <div class="w-14 h-14 bg-cyan-100 text-cyan-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="fingerprint" class="w-7 h-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-slate-900">Brand Identity</h4>
+                    <p class="text-slate-600 leading-relaxed">Cohesive visual identities, typography, and messaging that make your brand memorable and trustworthy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Case Studies (Parallax) -->
+    <section class="py-24 md:py-32 bg-brand-dark relative z-10 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="mb-20 reveal-up">
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">Selected Work.</h2>
+                <div class="h-1 w-20 bg-brand-blue mt-6"></div>
+            </div>
+
+            <div class="space-y-32">
+                <!-- Case Study 1 -->
+                <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                    <div class="w-full lg:w-1/2 reveal-left">
+                        <span class="text-brand-blue font-semibold tracking-wide uppercase text-sm mb-2 block">Fintech</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Nova Banking App</h3>
+                        <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                            We completely reimagined the digital banking experience for Nova, focusing on intuitive navigation, clear data visualization, and a frictionless onboarding process. The result was a 40% increase in daily active users.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-slate-300">
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-blue"></i> UX/UI Design</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-blue"></i> React Native Development</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-blue"></i> Design System</li>
+                        </ul>
+                        <a href="#" class="inline-flex items-center gap-2 text-white font-medium hover:text-brand-blue transition-colors group">
+                            Read Case Study <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                    <div class="w-full lg:w-1/2 relative reveal-right">
+                        <!-- Parallax Container with Real Image -->
+                        <div class="aspect-[4/3] rounded-2xl overflow-hidden glass p-4 transform perspective-1000">
+                            <div class="w-full h-full bg-slate-800 rounded-xl overflow-hidden relative bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=2070&auto=format&fit=crop');" data-parallax="0.1">
+                                <!-- Subtle overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/30 to-purple-800/30"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case Study 2 (Reversed) -->
+                <div class="flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-20">
+                    <div class="w-full lg:w-1/2 reveal-right">
+                        <span class="text-emerald-500 font-semibold tracking-wide uppercase text-sm mb-2 block">E-Commerce</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Lumina Lifestyle</h3>
+                        <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                            Scaling a high-end lifestyle brand required a robust, lightning-fast e-commerce platform. We migrated Lumina to a headless architecture using Next.js and Shopify, resulting in a 2.5x increase in conversion rate.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-slate-300">
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Headless Commerce</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Next.js Frontend</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i> Performance Optimization</li>
+                        </ul>
+                        <a href="#" class="inline-flex items-center gap-2 text-white font-medium hover:text-emerald-500 transition-colors group">
+                            Read Case Study <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                    <div class="w-full lg:w-1/2 relative reveal-left">
+                        <!-- Parallax Container with Real Image -->
+                        <div class="aspect-[4/3] rounded-2xl overflow-hidden glass p-4 transform perspective-1000">
+                            <div class="w-full h-full bg-slate-800 rounded-xl overflow-hidden relative bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop');" data-parallax="0.08">
+                                <!-- Subtle overlay -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/30 to-teal-900/30"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Grid -->
+    <section id="work" class="py-24 bg-slate-900 relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Portfolio Item 1 -->
+                <div class="group relative aspect-[4/5] rounded-2xl overflow-hidden reveal-up cursor-pointer bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-indigo-900/80 transition-transform duration-700 group-hover:scale-105"></div>
+                    <div class="absolute inset-0 portfolio-overlay opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="text-blue-300 text-sm font-medium mb-2">Web App</span>
+                        <h4 class="text-2xl font-bold text-white mb-2">Sync Analytics</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">Data dashboard for enterprise.</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 2 -->
+                <div class="group relative aspect-[4/5] rounded-2xl overflow-hidden reveal-up delay-100 cursor-pointer bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=1974&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-br from-rose-900/80 to-orange-900/80 transition-transform duration-700 group-hover:scale-105"></div>
+                    <div class="absolute inset-0 portfolio-overlay opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="text-rose-300 text-sm font-medium mb-2">Marketing Site</span>
+                        <h4 class="text-2xl font-bold text-white mb-2">Aura Skincare</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">E-commerce visual overhaul.</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 3 -->
+                <div class="group relative aspect-[4/5] rounded-2xl overflow-hidden reveal-up delay-200 cursor-pointer lg:mt-12 bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1526498460520-4c246339dccb?q=80&w=2070&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/80 to-cyan-900/80 transition-transform duration-700 group-hover:scale-105"></div>
+                    <div class="absolute inset-0 portfolio-overlay opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="text-emerald-300 text-sm font-medium mb-2">Mobile App</span>
+                        <h4 class="text-2xl font-bold text-white mb-2">FitJourney</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">iOS and Android wellness tracker.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center reveal-up">
+                <a href="#" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors font-medium">
+                    View Complete Archive <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 md:py-32 bg-slate-50 text-slate-900 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal-up">
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-6">Simple, transparent pricing.</h2>
+                <p class="text-slate-600 text-lg">Choose the engagement model that best fits your current needs. No hidden fees.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
+                <!-- Plan 1 -->
+                <div class="glass-card-light rounded-3xl p-8 reveal-up">
+                    <h3 class="text-xl font-semibold mb-2">Project Based</h3>
+                    <p class="text-slate-500 text-sm mb-6 h-10">Best for specific builds with clear scopes.</p>
+                    <div class="mb-6 flex items-baseline gap-1">
+                        <span class="text-4xl font-bold">Custom</span>
+                    </div>
+                    <a href="#contact" class="block w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium text-center rounded-xl transition-colors mb-8">Get an Estimate</a>
+                    <ul class="space-y-4 text-sm text-slate-600">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Fixed timeline & budget</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Dedicated project manager</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Full ownership of assets</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> 30 days post-launch support</li>
+                    </ul>
+                </div>
+
+                <!-- Plan 2 (Highlighted) -->
+                <div class="bg-brand-dark rounded-3xl p-8 shadow-2xl transform md:-translate-y-4 border border-brand-blue/30 relative overflow-hidden reveal-up delay-100">
+                    <div class="absolute top-0 right-0 px-4 py-1 bg-brand-blue text-xs font-bold text-white rounded-bl-lg">POPULAR</div>
+                    <!-- Subtle glow -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-brand-blue/10 blur-[50px] pointer-events-none"></div>
+                    
+                    <h3 class="text-xl font-semibold mb-2 text-white relative z-10">Design Subscription</h3>
+                    <p class="text-slate-400 text-sm mb-6 h-10 relative z-10">Continuous design support for growing teams.</p>
+                    <div class="mb-6 flex items-baseline gap-1 relative z-10">
+                        <span class="text-4xl font-bold text-white">$4,995</span>
+                        <span class="text-slate-400">/mo</span>
+                    </div>
+                    <a href="#contact" class="block w-full py-3 px-4 bg-brand-blue hover:bg-blue-500 text-white font-medium text-center rounded-xl transition-colors mb-8 relative z-10 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]">Subscribe Now</a>
+                    <ul class="space-y-4 text-sm text-slate-300 relative z-10">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Pause or cancel anytime</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Unlimited requests</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> 48-hour average delivery</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> UX/UI, Branding, Webflow</li>
+                    </ul>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="glass-card-light rounded-3xl p-8 reveal-up delay-200">
+                    <h3 class="text-xl font-semibold mb-2">Dedicated Team</h3>
+                    <p class="text-slate-500 text-sm mb-6 h-10">Embed our experts directly into your workflow.</p>
+                    <div class="mb-6 flex items-baseline gap-1">
+                        <span class="text-4xl font-bold text-slate-900">Let's Talk</span>
+                    </div>
+                    <a href="#contact" class="block w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium text-center rounded-xl transition-colors mb-8">Contact Sales</a>
+                    <ul class="space-y-4 text-sm text-slate-600">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Full-time dedicated resources</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Seamless agile integration</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Engineers, Designers, PMs</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-blue shrink-0"></i> Monthly billing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 bg-white text-slate-900 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 reveal-up">Loved by ambitious founders.</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 reveal-up">
+                    <div class="flex gap-1 text-amber-400 mb-6">
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <p class="text-lg text-slate-700 mb-8 font-medium leading-relaxed">"Nexus didn't just build a website; they helped refine our entire product strategy. Their design subscription model allowed us to move incredibly fast during our seed stage."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full overflow-hidden flex items-center justify-center text-slate-500 font-bold bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1887&auto=format&fit=crop');"></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Sarah Jenkins</h4>
+                            <p class="text-sm text-slate-500">CEO, TechFlow</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 reveal-up delay-100">
+                    <div class="flex gap-1 text-amber-400 mb-6">
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                    </div>
+                    <p class="text-lg text-slate-700 mb-8 font-medium leading-relaxed">"The engineering quality is top-tier. They delivered a complex React application on time and bug-free. It feels like an extension of our internal team."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full overflow-hidden flex items-center justify-center text-slate-500 font-bold bg-cover-center" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop');"></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Marcus Rodriguez</h4>
+                            <p class="text-sm text-slate-500">CTO, DataSync</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-24 bg-brand-dark border-t border-white/5">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <p class="text-slate-400">Everything you need to know about working with us.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <details class="group glass rounded-xl reveal-up" open>
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                        <span>How does the design subscription work?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-400 px-6 pb-6 text-base leading-relaxed">
+                        Once subscribed, you can add as many design requests to your queue as you'd like. We'll work through them one by one. On average, most requests are completed in just two days or less.
+                    </div>
+                </details>
+
+                <!-- FAQ Item 2 -->
+                <details class="group glass rounded-xl reveal-up delay-100">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                        <span>What is your typical project timeline?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-400 px-6 pb-6 text-base leading-relaxed hidden group-open:block">
+                        Timelines vary greatly depending on scope. A simple marketing website might take 4-6 weeks, while a complex web application could take 3-6 months. We define clear milestones during the strategy phase.
+                    </div>
+                </details>
+
+                <!-- FAQ Item 3 -->
+                <details class="group glass rounded-xl reveal-up delay-200">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                        <span>Do you only do design, or development too?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-400 px-6 pb-6 text-base leading-relaxed hidden group-open:block">
+                        We are a full-service digital agency. We handle everything from initial product strategy and UX/UI design to full-stack development and deployment.
+                    </div>
+                </details>
+
+                 <!-- FAQ Item 4 -->
+                 <details class="group glass rounded-xl reveal-up delay-300">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                        <span>What tech stack do you specialize in?</span>
+                        <span class="transition group-open:rotate-180">
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-400 px-6 pb-6 text-base leading-relaxed hidden group-open:block">
+                        Our core stack revolves around modern JavaScript. We heavily use React, Next.js, Node.js, and Tailwind CSS. For mobile, we specialize in React Native. For CMS, we prefer Sanity or Webflow.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white text-slate-900 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-16">
+                <div class="w-full lg:w-5/12 reveal-right">
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-6">Let's build something great.</h2>
+                    <p class="text-slate-600 text-lg mb-10">Fill out the form and our team will get back to you within 24 hours to schedule a discovery call.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                                <i data-lucide="mail" class="w-5 h-5 text-brand-blue"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-900">Email us</h4>
+                                <p class="text-slate-500">hello@nexusagency.co</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-brand-blue"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-900">Visit us</h4>
+                                <p class="text-slate-500">100 Innovation Drive<br>San Francisco, CA 94103</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-7/12 reveal-left">
+                    <form class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">First Name</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors" placeholder="John">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Last Name</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors" placeholder="Doe">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                            <input type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors" placeholder="john@company.com">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Project Details</label>
+                            <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors resize-none" placeholder="Tell us about your goals..."></textarea>
+                        </div>
+                        <button type="button" class="w-full py-4 bg-brand-blue text-white rounded-xl font-semibold hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/30">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark pt-20 pb-10 border-t border-white/10 relative overflow-hidden">
+        <!-- Subtle Footer Glow -->
+        <div class="absolute bottom-[-20%] left-1/2 -translate-x-1/2 w-[80%] h-[50%] bg-brand-blue/10 rounded-[100%] blur-[100px] pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center">
+                            <i data-lucide="hexagon" class="text-white w-5 h-5 fill-white/20"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-white">Nexus</span>
+                    </div>
+                    <p class="text-slate-400 max-w-sm">Crafting digital experiences that matter. We combine strategy, design, and engineering to build the future of the web.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-semibold mb-6">Navigation</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><a href="#services" class="hover:text-brand-blue transition-colors">Services</a></li>
+                        <li><a href="#work" class="hover:text-brand-blue transition-colors">Work</a></li>
+                        <li><a href="#pricing" class="hover:text-brand-blue transition-colors">Pricing</a></li>
+                        <li><a href="#about" class="hover:text-brand-blue transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-6">Socials</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><a href="#" class="hover:text-brand-blue transition-colors flex items-center gap-2"><i data-lucide="twitter" class="w-4 h-4"></i> Twitter</a></li>
+                        <li><a href="#" class="hover:text-brand-blue transition-colors flex items-center gap-2"><i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn</a></li>
+                        <li><a href="#" class="hover:text-brand-blue transition-colors flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> GitHub</a></li>
+                        <li><a href="#" class="hover:text-brand-blue transition-colors flex items-center gap-2"><i data-lucide="dribbble" class="w-4 h-4"></i> Dribbble</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+                <p>&copy; 2026 Nexus Digital Agency. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('glass-nav');
+                navbar.classList.remove('bg-transparent', 'py-4');
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('glass-nav', 'py-2');
+                navbar.classList.add('bg-transparent', 'py-4');
+            }
+        });
+
+        // Scroll Reveal Logic (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
+        
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Optional: Stop observing once revealed
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Simple Parallax Effect
+        const parallaxElements = document.querySelectorAll('[data-parallax]');
+        
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(() => {
+                const scrolled = window.scrollY;
+                parallaxElements.forEach(el => {
+                    const speed = el.getAttribute('data-parallax');
+                    const yPos = -(scrolled * speed);
+                    // Only apply if element is somewhat in viewport to save performance
+                    const rect = el.getBoundingClientRect();
+                    if(rect.top < window.innerHeight && rect.bottom > 0) {
+                        el.style.transform = `translate3d(0, ${yPos}px, 0)`;
+                    }
+                });
+            });
+        });
+
+        // FAQ Accordion smooth toggle logic (optional enhancement for standard <details>)
+        const details = document.querySelectorAll("details");
+        details.forEach((targetDetail) => {
+            targetDetail.addEventListener("click", () => {
+                details.forEach((detail) => {
+                    if (detail !== targetDetail) {
+                        detail.removeAttribute("open");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
