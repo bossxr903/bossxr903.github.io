@@ -2061,7 +2061,7 @@
                     // Message formatting for Telegram (using HTML safely)
                     const telegramMessage = `🌟 <b>New Contact from Portfolio!</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone || 'N/A'}\n<b>Message:</b>\n${message}`;
                     
-                    const telegramUrl = `https://api.telegram.org/bot${botTsendMesesagoken}/`;
+                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
                     try {
                         // Send data to Telegram Bot API
@@ -2090,15 +2090,15 @@
                             }, 5000);
                         } else {
                             // API returned an error
-                            console.log(result);
+                            console.error("Telegram Error:", result);
                             formError.style.display = 'block';
-                            formError.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: Please check Bot Token/Chat ID.`;
+                            formError.innerHTML = `<i class="fas fa-exclamation-circle"></i> <b>API Error:</b> ${result.description}`;
                         }
                     } catch (error) {
                         // Network error
-                        console.error(error);
+                        console.error("Network Error:", error);
                         formError.style.display = 'block';
-                        formError.innerHTML = `<i class="fas fa-exclamation-circle"></i> Network error occurred.`;
+                        formError.innerHTML = `<i class="fas fa-exclamation-circle"></i> <b>Network Error:</b> ${error.message}`;
                     } finally {
                         // Reset button state
                         btn.innerHTML = originalText;
