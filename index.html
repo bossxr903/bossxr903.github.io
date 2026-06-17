@@ -2058,10 +2058,10 @@
                     // Replace 'YOUR_CHAT_ID_HERE' with your numeric Chat ID
                     const chatId = '6621020810';
                     
-                    // Message formatting for Telegram (using Markdown)
-                    const telegramMessage = `🌟 *New Contact from Portfolio!*\n\n*Name:* ${name}\n*Email:* ${email}\n*Phone:* ${phone || 'N/A'}\n*Message:* ${message}`;
+                    // Message formatting for Telegram (using HTML safely)
+                    const telegramMessage = `🌟 <b>New Contact from Portfolio!</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone || 'N/A'}\n<b>Message:</b>\n${message}`;
                     
-                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                    const telegramUrl = `https://api.telegram.org/bot${botTsendMesesagoken}/`;
 
                     try {
                         // Send data to Telegram Bot API
@@ -2073,7 +2073,7 @@
                             body: JSON.stringify({
                                 chat_id: chatId,
                                 text: telegramMessage,
-                                parse_mode: 'Markdown'
+                                parse_mode: 'HTML'
                             })
                         });
 
