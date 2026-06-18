@@ -1993,7 +1993,7 @@
             }, 5000);
 
             /* ==============================================
-               10. Contact Form Submission (TELEGRAM BOT via GET)
+               10. Contact Form Submission (TELEGRAM BOT)
                ============================================== */
             const contactForm = document.getElementById('contactForm');
             const nameInput = document.getElementById('name');
@@ -2052,20 +2052,30 @@
                     const message = messageInput.value;
 
                     // ==========================================
-                    // TELEGRAM BOT CONFIGURATION
+                    // TELEGRAM BOT CONFIGURATION (UPDATED)
                     // ==========================================
-                    const botToken = '8987049202:AAEy3YyoJl8q7gWXXPFnmbju3ynFa57pGyc'; 
+                    // Updated with the new token provided in the prompt
+                    const botToken = '8987049202:AAH6CyFvt0--CYRYHC6TjexTi257_8_9nAo'; 
                     const chatId = '6621020810';
                     
                     // Message formatting for Telegram (using HTML safely)
                     const telegramMessage = `🌟 <b>New Contact from Portfolio!</b>\n\n<b>Name:</b> ${name}\n<b>Email:</b> ${email}\n<b>Phone:</b> ${phone || 'N/A'}\n<b>Message:</b>\n${message}`;
                     
-                    // Construct GET URL with encoded message
-                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(telegramMessage)}&parse_mode=HTML`;
+                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
                     try {
-                        // Send data to Telegram Bot API using GET request
-                        const response = await fetch(telegramUrl);
+                        // Send data to Telegram Bot API
+                        const response = await fetch(telegramUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                chat_id: chatId,
+                                text: telegramMessage,
+                                parse_mode: 'HTML'
+                            })
+                        });
 
                         const result = await response.json();
 
